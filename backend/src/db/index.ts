@@ -22,6 +22,8 @@ pool.on("error", (err) => {
 
 export const db = drizzle({ client: pool, schema });
 
+// 與資料庫進行連線
+
 // 👀 What is a Connection Pool?
 // A connection pool is a cache of database connections that are kept open and reused.
 
