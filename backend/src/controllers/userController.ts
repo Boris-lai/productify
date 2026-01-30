@@ -3,6 +3,14 @@ import * as queries from "../db/queries";
 
 import { getAuth } from "@clerk/express";
 
+/**
+ * Upserts the authenticated user into the database after validating the request body.
+ *
+ * Validates that `email`, `name`, and `imageUrl` are present in `req.body`, obtains the authenticated user's id via Clerk, and upserts a user record. Responds with 401 if the request is unauthenticated, 400 if validation fails, 200 with the upserted user on success, and 500 on internal error.
+ *
+ * @param req - Express request; `req.body` must include `email`, `name`, and `imageUrl`
+ * @param res - Express response used to send HTTP status and JSON payloads
+ */
 export async function syncUser(req: Request, res: Response) {
   try {
     const { userId } = getAuth(req);
