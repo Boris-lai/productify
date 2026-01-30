@@ -1,6 +1,7 @@
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
+// users
 export const users = pgTable("users", {
   id: text("id").primaryKey(), // clerkId
   email: text("email").notNull().unique(),
@@ -14,6 +15,7 @@ export const users = pgTable("users", {
     .$onUpdate(() => new Date()),
 });
 
+// products
 export const products = pgTable("products", {
   id: uuid("id").defaultRandom().primaryKey(),
   title: text("title").notNull(),
@@ -26,6 +28,7 @@ export const products = pgTable("products", {
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });
 
+// comments
 export const comments = pgTable("comments", {
   id: uuid("id").defaultRandom().primaryKey(),
   content: text("content").notNull(),
