@@ -2,6 +2,8 @@ import { useAuth } from "@clerk/clerk-react";
 import { useEffect } from "react";
 import api from "../lib/axios";
 
+let isInterceptorRegistered = false;
+
 function useAuthReq() {
   const { isSignedIn, getToken, isLoaded } = useAuth();
 
@@ -9,6 +11,9 @@ function useAuthReq() {
   // 在每一個請求裡，希望在標頭附上 token
   // api 才能檢查 token，並判斷這個請求是否被驗證
   useEffect(() => {
+    if (isInterceptorRegistered) return;
+    isInterceptorRegistered = true;
+
     const interceptor = api.interceptors.request.use(async (config) => {
       if (isSignedIn) {
         const token = await getToken();
@@ -21,7 +26,10 @@ function useAuthReq() {
     });
 
     // remove
-    return () => api.interceptors.request.eject(interceptor);
+    return () => {
+      api.interceptors.request.eject(interceptor);
+      isInterceptorRegistered = false;
+    };
   }, [isSignedIn, getToken]);
 
   return { isSignedIn, isClerkLoaded: isLoaded };
