@@ -9,6 +9,12 @@ export const createComment = async (req: Request, res: Response) => {
     if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
     const { productId } = req.params;
+
+    // 驗證 productId 是否存在且為有效格式
+    if (!productId || typeof productId !== "string") {
+      return res.status(400).json({ error: "Invalid product ID" });
+    }
+
     const { content } = req.body;
 
     if (!content)
@@ -16,7 +22,7 @@ export const createComment = async (req: Request, res: Response) => {
 
     // verify product exists
     const product = await queries.getProductById(productId);
-    if (!product) return res.status(404).json({ error: "Product not found!" });
+    if (!product) return res.status(404).json({ error: "Product not found" });
 
     const comment = await queries.createComment({
       content,
